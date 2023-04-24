@@ -1,0 +1,10 @@
+
+
+.imgContainer{
+    width: 10vw;
+    display: none;
+}
+
+.img{
+    object-fit: contain;
+}
