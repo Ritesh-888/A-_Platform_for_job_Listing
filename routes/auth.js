@@ -38,7 +38,7 @@ router.post('/register', async (req, res) => {
     const token = jwt.sign({ user: user.email }, process.env.JWT_SECRET_KEY); // Replace 'SECRET_KEY' with your own secret key
 
     // Return success response
-    res.json({ success: true, token, user:email });
+    res.json({ success: true, token, user:email, name:name });
   } catch (error) {
     errorHandler(res, error);
   }
