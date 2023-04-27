@@ -1,5 +1,30 @@
 import styles from './Style.module.css'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 export const Listing = ()=>{
+    const navigate = useNavigate()
+    const [jobs, setJobs] = useState([])
+    const [skills, setSkills] = useState([])
+    console.log(skills)
+
+    const handleSkill = (e)=>{
+        if(!skills.includes(e.target.value))
+        setSkills((prev)=>[...prev,e.target.value])
+    }
+
+    const handleRemove = (skill)=>{
+        const index = skills.indexOf(skill)
+        skills.splice(index,1)
+        setSkills([...skills])
+    }
+    useEffect(()=>{
+        const options = {method: 'GET'};
+        const search = skills.join("&")
+        fetch(`http://localhost:3000/api/job/job-posts?skillsRequired=${search}`, options)
+        .then(response => response.json())
+        .then(response => setJobs([...response.jobPosts]))
+        .catch(err => console.error(err));
+    },[skills])
     return(
         <>
             <div className={styles.container}>
@@ -7,21 +32,27 @@ export const Listing = ()=>{
                 <input className={styles.inputTop}  type="text" name='search' placeholder='Type any job title'/>
                 </div>
                 <div className={styles.containerBottom}>
-                <select className={styles.inputSelect} name="remote">
+                <select onClick={handleSkill}  className={styles.inputSelect} name="remote">
                     <option value="">Skills</option>
-                    <option value="remote">Remote</option>
-                    <option value="office">Office</option>
+                    {codingSkills.map((skill) => (
+                        <option key={skill} value={skill}>
+                            {skill}
+                        </option>
+                    ))}
                 </select>
-                {data.skills.map((skill)=>{
+                {skills.map((skill)=>{
                         return (
-                            <span className={styles.chip} key={skill}>{skill}</span>
+                            <span className={styles.chip} key={skill}>{skill}<span onClick={()=>handleRemove(skill)} className={styles.cross}>X</span></span>
                         )
                     }
                     )}
-                <button className={styles.edit}>Add Job</button>
+                <button onClick={()=>navigate("/addJob")}  className={styles.edit}>Add Job</button>
                 </div>
             </div>
-            <div className={styles.list}>
+            {/* <div className={styles.bottom}> */}
+            {jobs.map((data)=>{
+                return(
+                  <div key={data._id}  className={styles.list}>
                     <div className={styles.listLeft}>
                         <div>
                             <img src={data.logoURL}/>
@@ -41,7 +72,7 @@ export const Listing = ()=>{
                     </div>
                     <div>
                         <div>
-                            {data.skills.map((skill)=>{
+                            {data.skillsRequired.map((skill)=>{
                                 return (
                                     <span className={styles.skill} key={skill}>{skill}</span>
                                 )
@@ -53,7 +84,10 @@ export const Listing = ()=>{
                             <button className={styles.view}>View Details</button>
                         </div>
                     </div>
-            </div>
+                 </div>
+                )
+            })}
+            {/* </div> */}
         </>
     )
 }
@@ -71,3 +105,19 @@ const data = {
   "skills": ["HTML", "CSS", "JavaScript", "React"]
 }
 
+const codingSkills = [
+    'JavaScript',
+    'Python',
+    'Java',
+    'C++',
+    'Ruby',
+    'PHP',
+    'Swift',
+    'Objective-C',
+    'SQL',
+    'HTML',
+    'CSS',
+    'css',
+    "node",
+    "react"
+  ];
