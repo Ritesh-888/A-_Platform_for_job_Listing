@@ -37,3 +37,9 @@
     border-radius: 6px;
     border: none;
 }
+
+.loggedInText{
+    color: white;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
