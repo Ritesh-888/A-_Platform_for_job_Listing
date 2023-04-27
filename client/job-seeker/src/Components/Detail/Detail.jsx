@@ -1,8 +1,25 @@
 import styles from './Style.module.css'
+import {useLocation} from 'react-router-dom'
+import {useState, useEffect} from 'react'
 export const Details = ()=>{
+
+    const [data, setData]= useState(undefined)
+    const {state} = useLocation();
+    const { id } = state;
+
+    useEffect(()=>{
+        const options = {method: 'GET'};
+
+        fetch(`http://localhost:3000/api/job/job-posts/${id}`, options)
+        .then(response => response.json())
+        .then(response => setData({...response.jobPost}))
+        .catch(err => console.error(err));
+    },[])
     return(
         <>
-            <div className={styles.container}>
+        {data?
+        <>
+             <div className={styles.container}>
                <p className={styles.containerText}>{data.companyName}</p>
             </div>
             <div className={styles.containerBottom}>
@@ -34,7 +51,7 @@ export const Details = ()=>{
                 </div>
                 <div className={styles.info}>
                     <h2>Skill(s) Required</h2>
-                    {data.skills.map((skill)=>{
+                    {data.skillsRequired.map((skill)=>{
                         return (
                             <span className={styles.skill} key={skill}>{skill}</span>
                         )
@@ -46,21 +63,12 @@ export const Details = ()=>{
                     <p>{data.description}</p>
                 </div>
             </div>
+            </>
+        :<></>}
         </>
     )
 }
 
 
 
-const data = {
-  "companyName": "Acme Inc.",
-  "logoURL": "https://example.com/logo.png",
-  "position": "Front-end Developer",
-  "salary": "$80,000",
-  "jobType": "full-time",
-  "remote": "yes",
-  "location": "New York, NY",
-  "description": "We're looking for a talented front-end developer to join our team.",
-  "about": "Acme Inc. is a leading provider of software solutions for businesses around the world. With a focus on innovation and quality, we're committed to delivering exceptional value to our customers.",
-  "skills": ["HTML", "CSS", "JavaScript", "React"]
-}
+

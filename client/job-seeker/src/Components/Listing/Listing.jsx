@@ -81,7 +81,7 @@ export const Listing = ()=>{
                         </div>
                         <div className={styles.btnGroup}>
                             <button className={styles.edit}>Edit job</button>
-                            <button className={styles.view}>View Details</button>
+                            <button onClick={()=>navigate('/detail', { state: { id: data._id} })}  className={styles.view}>View Details</button>
                         </div>
                     </div>
                  </div>
@@ -92,18 +92,7 @@ export const Listing = ()=>{
     )
 }
 
-const data = {
-  "companyName": "Acme Inc.",
-  "logoURL": "https://example.com/logo.png",
-  "position": "Front-end Developer",
-  "salary": "$80,000",
-  "jobType": "full-time",
-  "remote": "remote",
-  "location": "New York, NY",
-  "description": "We're looking for a talented front-end developer to join our team.",
-  "about": "Acme Inc. is a leading provider of software solutions for businesses around the world. With a focus on innovation and quality, we're committed to delivering exceptional value to our customers.",
-  "skills": ["HTML", "CSS", "JavaScript", "React"]
-}
+
 
 const codingSkills = [
     'JavaScript',
