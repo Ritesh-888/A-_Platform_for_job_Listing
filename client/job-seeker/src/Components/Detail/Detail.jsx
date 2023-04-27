@@ -1,8 +1,8 @@
 import styles from './Style.module.css'
-import {useLocation} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 export const Details = ()=>{
-
+    const navigate = useNavigate()
     const [data, setData]= useState(undefined)
     const {state} = useLocation();
     const { id } = state;
@@ -32,7 +32,7 @@ export const Details = ()=>{
                     <p className={styles.locationText}>{data.location}</p>
                     </div>
                     <div>
-                        <button className={styles.edit}>Edit Job</button>
+                        <button onClick={()=>{navigate('/addJob', { state: { id: data._id, edit:true} })}}  className={styles.edit}>Edit Job</button>
                     </div>
                 </div>
                 <div className={styles.perks}>

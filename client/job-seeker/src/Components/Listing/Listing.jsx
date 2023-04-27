@@ -5,7 +5,25 @@ export const Listing = ()=>{
     const navigate = useNavigate()
     const [jobs, setJobs] = useState([])
     const [skills, setSkills] = useState([])
-    console.log(skills)
+    const [search, setSearch] = useState("")
+    const handleSearch = (e)=>{
+        setSearch(e.target.value)
+    }
+    
+    useEffect(()=>{
+        if(search.length>0){
+            const arr = jobs.filter(job=>job?.position?.includes(search))
+            console.log(arr)
+            setJobs([...arr])
+        }
+        else{
+            const options = {method: 'GET'};
+        fetch(`http://localhost:3000/api/job/job-posts?skillsRequired=`, options)
+        .then(response => response.json())
+        .then(response => setJobs([...response.jobPosts]))
+        .catch(err => console.error(err));
+        }
+    },[search])
 
     const handleSkill = (e)=>{
         if(!skills.includes(e.target.value))
@@ -29,7 +47,7 @@ export const Listing = ()=>{
         <>
             <div className={styles.container}>
                 <div className={styles.containerTop}>
-                <input className={styles.inputTop}  type="text" name='search' placeholder='Type any job title'/>
+                <input className={styles.inputTop} value={search} onChange={handleSearch}  type="text" name='search' placeholder='Type any job title'/>
                 </div>
                 <div className={styles.containerBottom}>
                 <select onClick={handleSkill}  className={styles.inputSelect} name="remote">
@@ -80,7 +98,7 @@ export const Listing = ()=>{
                         )}
                         </div>
                         <div className={styles.btnGroup}>
-                            <button className={styles.edit}>Edit job</button>
+                            <button onClick={()=>navigate('/addJob', { state: { id: data._id, edit:true} })} className={styles.edit}>Edit job</button>
                             <button onClick={()=>navigate('/detail', { state: { id: data._id} })}  className={styles.view}>View Details</button>
                         </div>
                     </div>
